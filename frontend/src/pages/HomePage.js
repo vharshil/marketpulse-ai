@@ -3,7 +3,7 @@ import SearchBar from '../components/SearchBar';
 import './HomePage.css';
 
 function HomePage() {
-  const [query, setQuery] = useState('');
+  const [, setQuery] = useState('');
 
   const handleSearch = (company) => {
     setQuery(company);
