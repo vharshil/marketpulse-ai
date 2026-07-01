@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './SearchBar.css';
 
-function SearchBar({ onSearch }) {
+function SearchBar({ onSearch, isLoading })  {
   const [value, setValue] = useState('');
 
   const handleSubmit = (e) => {
@@ -23,9 +23,9 @@ function SearchBar({ onSearch }) {
           onChange={(e) => setValue(e.target.value)}
           autoFocus
         />
-        <button className="search-btn" type="submit">
-          Analyse
-        </button>
+       <button className="search-btn" type="submit" disabled={isLoading}>
+  {isLoading ? 'Analysing...' : 'Analyse'}
+</button>
       </div>
     </form>
   );

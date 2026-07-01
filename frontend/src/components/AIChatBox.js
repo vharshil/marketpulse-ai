@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './AIChatBox.css';
+import { askAI } from '../services/api';
 
-function AIChatBox({ company }) {
+function AIChatBox({ company, context }) {
   const [messages, setMessages] = useState([
     {
       role: 'ai',
@@ -16,7 +17,7 @@ function AIChatBox({ company }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim() || isTyping) return;
 
     const userMsg = { role: 'user', text: input };
@@ -24,16 +25,24 @@ function AIChatBox({ company }) {
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      const answer = await askAI({
+        question: input,
+        company,
+        context,
+      });
+      setMessages((prev) => [...prev, { role: 'ai', text: answer }]);
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
           role: 'ai',
-          text: `Based on recent news about ${company}, the sentiment appears mixed. This is mock data — real AI answers will come after backend is connected!`,
+          text: 'Sorry, I could not connect to AI right now. Please try again.',
         },
       ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleKey = (e) => {
@@ -52,7 +61,7 @@ function AIChatBox({ company }) {
         <span className="chatbox-icon">🤖</span>
         <div>
           <h3 className="chatbox-title">Ask AI about {company}</h3>
-        <p className="chatbox-subtitle">MarketPulse AI · Powered by Gemini</p>
+          <p className="chatbox-subtitle">MarketPulse AI · Powered by Gemini</p>
         </div>
       </div>
 
@@ -95,7 +104,11 @@ function AIChatBox({ company }) {
           onKeyDown={handleKey}
           disabled={isTyping}
         />
-        <button className="chat-send-btn" onClick={handleSend} disabled={isTyping || !input.trim()}>
+        <button
+          className="chat-send-btn"
+          onClick={handleSend}
+          disabled={isTyping || !input.trim()}
+        >
           Send ↗
         </button>
       </div>
