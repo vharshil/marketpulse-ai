@@ -6,6 +6,7 @@ import NewsFeed from '../components/NewsFeed';
 import AIChatBox from '../components/AIChatBox';
 import { analyzeStock } from '../services/api';
 import './HomePage.css';
+import MLPredictionCard from '../components/MLPredictionCard';
 
 function HomePage() {
   const [results, setResults] = useState(null);
@@ -97,10 +98,16 @@ function HomePage() {
             <SentimentChart data={results.chart_data} />
             <NewsFeed articles={results.articles} />
           </div>
-          <AIChatBox
-            company={results.company}
-            context={results.summary}
-          />
+
+          <MLPredictionCard
+  mlPrediction={results.ml_prediction}
+  fusionScore={results.fusion_score}
+/>
+<AIChatBox
+  company={results.company}
+  context={results.summary}
+/>
+          
         </section>
       )}
 
