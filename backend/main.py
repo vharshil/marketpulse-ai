@@ -6,13 +6,14 @@ import os
 
 from news_service import fetch_news
 from gemini_service import analyze_sentiment, answer_question
+from ml_service import predict_trend, compute_fusion_score
 
 load_dotenv()
 
 app = FastAPI(
     title="MarketPulse AI Backend",
-    description="Backend API for stock sentiment and trend analysis",
-    version="1.0.0"
+    description="Stock sentiment + ML trend analysis platform",
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -37,21 +38,34 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "MarketPulse AI Backend is running 🚀"}
+    return {
+        "status": "ok",
+        "message": "MarketPulse AI Backend v2.0 is running 🚀",
+        "features": ["news", "gemini_sentiment", "ml_trend", "fusion_score"]
+    }
 
 
 @app.get("/analyze")
 async def analyze(company: str):
+    """
+    Full analysis endpoint:
+    1. Fetch live news
+    2. Gemini AI sentiment analysis
+    3. ML trend prediction from historical data
+    4. Fusion confidence score combining both
+    """
     if not company or len(company.strip()) < 2:
         raise HTTPException(status_code=400, detail="Company name too short")
 
     company = company.strip()
-    articles = await fetch_news(company)
 
+    articles = await fetch_news(company)
     if not articles:
         raise HTTPException(status_code=404, detail=f"No news found for {company}")
 
     sentiment_result = await analyze_sentiment(company, articles)
+    ml_result = await predict_trend(company)
+    fusion = compute_fusion_score(sentiment_result["sentiment"], ml_result)
 
     return {
         "company": company,
@@ -60,6 +74,8 @@ async def analyze(company: str):
         "sentiment": sentiment_result["sentiment"],
         "summary": sentiment_result.get("summary", ""),
         "chart_data": sentiment_result["chart_data"],
+        "ml_prediction": ml_result,
+        "fusion_score": fusion,
     }
 
 
@@ -76,4 +92,8 @@ async def chat(body: ChatRequest):
 @app.get("/news")
 async def get_news(company: str):
     articles = await fetch_news(company)
-    return {"company": company, "articles_count": len(articles), "articles": articles}
+    return {
+        "company": company,
+        "articles_count": len(articles),
+        "articles": articles
+    }
