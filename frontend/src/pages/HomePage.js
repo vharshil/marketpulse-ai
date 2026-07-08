@@ -4,9 +4,10 @@ import SentimentCards from '../components/SentimentCards';
 import SentimentChart from '../components/SentimentChart';
 import NewsFeed from '../components/NewsFeed';
 import AIChatBox from '../components/AIChatBox';
+import MLPredictionCard from '../components/MLPredictionCard';
+import SearchHistory from '../components/SearchHistory';
 import { analyzeStock } from '../services/api';
 import './HomePage.css';
-import MLPredictionCard from '../components/MLPredictionCard';
 
 function HomePage() {
   const [results, setResults] = useState(null);
@@ -60,6 +61,9 @@ function HomePage() {
               ))}
             </div>
           </div>
+
+          <SearchHistory onSelect={handleSearch} />
+
         </div>
       </section>
 
@@ -98,16 +102,14 @@ function HomePage() {
             <SentimentChart data={results.chart_data} />
             <NewsFeed articles={results.articles} />
           </div>
-
           <MLPredictionCard
-  mlPrediction={results.ml_prediction}
-  fusionScore={results.fusion_score}
-/>
-<AIChatBox
-  company={results.company}
-  context={results.summary}
-/>
-          
+            mlPrediction={results.ml_prediction}
+            fusionScore={results.fusion_score}
+          />
+          <AIChatBox
+            company={results.company}
+            context={results.summary}
+          />
         </section>
       )}
 

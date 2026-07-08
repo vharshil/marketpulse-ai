@@ -7,6 +7,7 @@ import os
 from news_service import fetch_news
 from gemini_service import analyze_sentiment, answer_question
 from ml_service import predict_trend, compute_fusion_score
+from database import save_search, get_history
 
 load_dotenv()
 
@@ -41,19 +42,11 @@ def root():
     return {
         "status": "ok",
         "message": "MarketPulse AI Backend v2.0 is running 🚀",
-        "features": ["news", "gemini_sentiment", "ml_trend", "fusion_score"]
     }
 
 
 @app.get("/analyze")
 async def analyze(company: str):
-    """
-    Full analysis endpoint:
-    1. Fetch live news
-    2. Gemini AI sentiment analysis
-    3. ML trend prediction from historical data
-    4. Fusion confidence score combining both
-    """
     if not company or len(company.strip()) < 2:
         raise HTTPException(status_code=400, detail="Company name too short")
 
@@ -66,6 +59,14 @@ async def analyze(company: str):
     sentiment_result = await analyze_sentiment(company, articles)
     ml_result = await predict_trend(company)
     fusion = compute_fusion_score(sentiment_result["sentiment"], ml_result)
+
+    await save_search(
+        company=company,
+        sentiment=sentiment_result["sentiment"],
+        ml_result=ml_result,
+        fusion=fusion,
+        summary=sentiment_result.get("summary", "")
+    )
 
     return {
         "company": company,
@@ -87,6 +88,13 @@ async def chat(body: ChatRequest):
         context=body.context
     )
     return {"answer": answer}
+
+
+@app.get("/history")
+async def history():
+    """Returns the last 10 searches from the database."""
+    records = await get_history(limit=10)
+    return {"history": records}
 
 
 @app.get("/news")

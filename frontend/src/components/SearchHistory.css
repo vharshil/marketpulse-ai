@@ -1,0 +1,45 @@
+.history-section {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.history-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.history-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.history-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.history-chip:hover {
+  border-color: var(--accent-blue);
+}
+
+.history-company {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.history-verdict {
+  font-size: 11px;
+  font-weight: 500;
+}
