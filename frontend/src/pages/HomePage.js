@@ -101,7 +101,7 @@ function HomePage() {
                 </p>
               </div>
               
-               <a href={`http://localhost:8000/report?company=${encodeURIComponent(results.company)}`}
+               <a href={`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/report?company=${encodeURIComponent(results.company)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="download-btn"
