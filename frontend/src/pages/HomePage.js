@@ -88,15 +88,29 @@ function HomePage() {
 
       {results && !isLoading && (
         <section className="results-section">
+
           <div className="results-header">
-            <h2 className="results-title">
-              Sentiment Analysis —{' '}
-              <span className="results-company">{results.company}</span>
-            </h2>
-            <p className="results-meta">
-              Based on {results.articles_count} live articles · Just now
-            </p>
+            <div className="results-header-top">
+              <div>
+                <h2 className="results-title">
+                  Sentiment Analysis —{' '}
+                  <span className="results-company">{results.company}</span>
+                </h2>
+                <p className="results-meta">
+                  Based on {results.articles_count} live articles · Just now
+                </p>
+              </div>
+              
+               <a href={`http://localhost:8000/report?company=${encodeURIComponent(results.company)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="download-btn"
+              >
+                📄 Download Report
+              </a>
+            </div>
           </div>
+
           <SentimentCards sentiment={results.sentiment} />
           <div className="two-col-grid">
             <SentimentChart data={results.chart_data} />
