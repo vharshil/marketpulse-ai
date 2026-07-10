@@ -57,6 +57,8 @@ Search any NSE, BSE or global stock → MarketPulse AI instantly:
 ---
 
 ## 📁 Project Structure
+
+```
 marketpulse-ai/
 ├── frontend/
 │   └── src/
@@ -66,13 +68,13 @@ marketpulse-ai/
 │       ├── pages/          # HomePage
 │       └── services/       # api.js — all backend calls
 └── backend/
-├── main.py             # FastAPI server + all endpoints
-├── news_service.py     # NewsAPI integration
-├── gemini_service.py   # Gemini AI sentiment + chat
-├── ml_service.py       # RandomForest model + Fusion Score
-├── database.py         # Supabase PostgreSQL
-└── report_service.py   # PDF generation with ReportLab
----
+    ├── main.py             # FastAPI server + all endpoints
+    ├── news_service.py     # NewsAPI integration
+    ├── gemini_service.py   # Gemini AI sentiment + chat
+    ├── ml_service.py       # RandomForest model + Fusion Score
+    ├── database.py         # Supabase PostgreSQL
+    └── report_service.py   # PDF generation with ReportLab
+```
 
 ## 🚦 API Endpoints
 
